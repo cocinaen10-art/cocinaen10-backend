@@ -31,23 +31,33 @@ Quiero una solución rápida para comer hoy.
 
 Devuelve SOLO JSON válido con este formato:
 {
-  "nombre": "",
-  "tiempo": "",
-  "coste": "",
-  "por_que": "",
-  "alternativa": "",
-  "ingredientes_usados": [],
-  "ingredientes_extra": [],
-  "pasos": []
+  "opcion_1": {
+    "nombre": "",
+    "tiempo": "",
+    "coste": "",
+    "por_que": "",
+    "ingredientes_usados": [],
+    "ingredientes_extra": [],
+    "pasos": []
+  },
+  "opcion_2": {
+    "nombre": "",
+    "tiempo": "",
+    "coste": "",
+    "por_que": "",
+    "ingredientes_usados": [],
+    "ingredientes_extra": [],
+    "pasos": []
+  }
 }
 
 Reglas:
+- Las dos opciones deben ser DIFERENTES
 - Usa principalmente los ingredientes dados
-- Puedes añadir máximo 2 ingredientes básicos extra
+- Puedes añadir máximo 2 ingredientes básicos extra por opción
 - Tiempo en minutos (ej: "10 min")
 - Coste: bajo, medio o alto
-- "por_que": explica brevemente por qué es buena opción
-- "alternativa": otra opción rápida con los mismos ingredientes
+- "por_que": explica por qué elegir esa opción
 - Pasos claros y simples
 - No escribas nada fuera del JSON`
       })
