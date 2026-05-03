@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 // Ruta control (la importante ahora)
 app.get("/recipes", async (req, res) => {
   try {
-    const ingrediente = req.query.ing || "pollo";
+    const ingredientes = req.query.ing || "huevos, pan";
 
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -24,7 +24,10 @@ app.get("/recipes", async (req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `Dame una receta sencilla usando ${ingrediente}. Solo nombre y pasos.`
+        input: `Tengo estos ingredientes: ${ingredientes}.
+Crea una receta usando SOLO estos ingredientes o añadiendo como máximo 2 ingredientes básicos extra.
+Receta simple, práctica y rápida.
+Devuelve nombre y pasos.`
       })
     });
 
