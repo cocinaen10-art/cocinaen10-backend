@@ -59,7 +59,9 @@ Reglas:
 - Coste: bajo, medio o alto
 - "por_que": explica por qué elegir esa opción
 - Pasos claros y simples
+- Cada paso debe incluir tiempo estimado (ej: "Paso 1 (2       min): ...")
 - No escribas nada fuera del JSON`
+
       })
     });
 
