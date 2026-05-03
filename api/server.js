@@ -30,7 +30,9 @@ app.get("/recipes", async (req, res) => {
 
     const data = await response.json();
 
-    return res.json(data); // ⚠️ devolvemos TODO (sin interpretar)
+    const texto = data.output?.[0]?.content?.[0]?.text || "No se pudo generar receta";
+
+return res.json({ receta: texto });
 
   } catch (error) {
     console.error(error);
