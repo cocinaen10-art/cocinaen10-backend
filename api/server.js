@@ -27,11 +27,15 @@ app.get("/recipes", async (req, res) => {
 
 input: `Tengo estos ingredientes: ${ingredientes}.
 
-Crea una receta práctica y rápida.
+Quiero una solución rápida para comer hoy.
 
 Devuelve SOLO JSON válido con este formato:
 {
   "nombre": "",
+  "tiempo": "",
+  "coste": "",
+  "por_que": "",
+  "alternativa": "",
   "ingredientes_usados": [],
   "ingredientes_extra": [],
   "pasos": []
@@ -40,7 +44,11 @@ Devuelve SOLO JSON válido con este formato:
 Reglas:
 - Usa principalmente los ingredientes dados
 - Puedes añadir máximo 2 ingredientes básicos extra
-- Pasos claros y numerados
+- Tiempo en minutos (ej: "10 min")
+- Coste: bajo, medio o alto
+- "por_que": explica brevemente por qué es buena opción
+- "alternativa": otra opción rápida con los mismos ingredientes
+- Pasos claros y simples
 - No escribas nada fuera del JSON`
       })
     });
