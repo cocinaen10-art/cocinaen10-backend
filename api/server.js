@@ -1,3 +1,17 @@
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// test
+app.get("/", (req, res) => {
+  res.send("Servidor activo");
+});
+
+// endpoint IA (OpenAI)
 app.get("/recipes", async (req, res) => {
   const ingrediente = req.query.ing || "genérico";
 
@@ -26,4 +40,10 @@ app.get("/recipes", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor en puerto ${PORT}`);
 });
