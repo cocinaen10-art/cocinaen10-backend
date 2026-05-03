@@ -24,10 +24,24 @@ app.get("/recipes", async (req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `Tengo estos ingredientes: ${ingredientes}.
-Crea una receta usando SOLO estos ingredientes o añadiendo como máximo 2 ingredientes básicos extra.
-Receta simple, práctica y rápida.
-Devuelve nombre y pasos.`
+
+input: `Tengo estos ingredientes: ${ingredientes}.
+
+Crea una receta práctica y rápida.
+
+Devuelve SOLO JSON válido con este formato:
+{
+  "nombre": "",
+  "ingredientes_usados": [],
+  "ingredientes_extra": [],
+  "pasos": []
+}
+
+Reglas:
+- Usa principalmente los ingredientes dados
+- Puedes añadir máximo 2 ingredientes básicos extra
+- Pasos claros y numerados
+- No escribas nada fuera del JSON`
       })
     });
 
