@@ -12,8 +12,30 @@ app.get("/", (req, res) => {
 });
 
 // Ruta control (la importante ahora)
-app.get("/recipes", (req, res) => {
-  res.json({ ok: true });
+app.get("/recipes", async (req, res) => {
+  try {
+    const ingrediente = req.query.ing || "pollo";
+
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        input: `Dame una receta sencilla usando ${ingrediente}. Solo nombre y pasos.`
+      })
+    });
+
+    const data = await response.json();
+
+    return res.json(data); // ⚠️ devolvemos TODO (sin interpretar)
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error llamando a OpenAI" });
+  }
 });
 
 // Arranque
