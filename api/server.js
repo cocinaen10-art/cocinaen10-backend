@@ -47,9 +47,23 @@ Reglas:
 
     const data = await response.json();
 
-    const texto = data.output?.[0]?.content?.[0]?.text || "No se pudo generar receta";
+    const raw = data.output?.[0]?.content?.[0]?.text || "";
 
-return res.json({ receta: texto });
+// limpiar ```json
+const limpio = raw
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
+
+let parsed;
+
+try {
+  parsed = JSON.parse(limpio);
+} catch (e) {
+  return res.json({ error: "JSON inválido", raw: limpio });
+}
+
+return res.json(parsed);
 
   } catch (error) {
     console.error(error);
