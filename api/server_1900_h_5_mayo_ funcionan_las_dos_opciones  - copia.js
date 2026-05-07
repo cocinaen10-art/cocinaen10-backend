@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔹 API KEY (una sola)
+// 🔹 API KEY (UNA SOLA VEZ)
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // 🔹 Ruta test
@@ -38,28 +38,6 @@ app.get("/ingredients", (req, res) => {
   res.json(resultados);
 });
 
-// 🔹 FUNCIÓN UNIVERSAL (clave)
-function extraerJSONSeguro(data) {
-  let raw = data.output_text;
-
-  if (!raw && data.output && data.output[0]?.content) {
-    raw = data.output[0].content
-      .map(c => c.text || "")
-      .join("");
-  }
-
-  if (!raw) return null;
-
-  raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
-
-  const inicio = raw.indexOf("{");
-  const fin = raw.lastIndexOf("}");
-
-  if (inicio === -1 || fin === -1) return null;
-
-  return raw.substring(inicio, fin + 1);
-}
-
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
   try {
@@ -75,9 +53,16 @@ app.get("/recipes", async (req, res) => {
         model: "gpt-4.1-mini",
         input: `Tengo estos ingredientes: ${ingredientes}.
 
-Quiero 2 recetas REALISTAS, rápidas y prácticas.
+Quiero 2 recetas REALISTAS, rápidas y prácticas para una persona normal.
 
-Devuelve SOLO JSON:
+Condiciones IMPORTANTES:
+- Usa principalmente los ingredientes dados
+- Puedes añadir máximo 2 ingredientes básicos extra (sal, aceite, etc.)
+- NO inventes ingredientes raros
+- Las recetas deben ser cosas que alguien haría en casa de verdad
+- Prioriza simplicidad y rapidez
+
+Devuelve SOLO JSON válido con este formato:
 {
   "opcion_1": {
     "nombre": "",
@@ -97,17 +82,31 @@ Devuelve SOLO JSON:
     "ingredientes_extra": [],
     "pasos": []
   }
-}`
+}
+
+Reglas:
+- Tiempo en minutos (ej: "10 min")
+- Coste: bajo, medio o alto
+- "por_que": explica por qué elegir esa receta
+- Pasos claros, cortos y prácticos
+- No escribas nada fuera del JSON`
       })
     });
 
     const data = await response.json();
 
-    const limpio = extraerJSONSeguro(data);
+    let raw = data.output_text;
 
-    if (!limpio) {
-      return res.json({ error: "No se pudo extraer JSON" });
+    if (!raw && data.output && data.output[0]?.content) {
+      raw = data.output[0].content
+        .map(c => c.text || "")
+        .join("");
     }
+
+    const limpio = raw
+      ?.replace(/```json/g, "")
+      ?.replace(/```/g, "")
+      ?.trim();
 
     let parsed;
 
@@ -138,34 +137,42 @@ app.get("/recipes-idea", async (req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `Quiero una receta basada en: ${idea}.
+        input: `Quiero una receta basada en esta idea: ${idea}.
 
-Devuelve SOLO JSON:
+Devuelve SOLO JSON válido con este formato:
 {
   "nombre": "",
   "tiempo": "",
   "coste": "",
   "ingredientes": [],
   "pasos": []
-}`
+}
+
+Reglas:
+- Ingredientes realistas y fáciles de conseguir
+- Receta práctica, no gourmet
+- Pasos claros y ordenados
+- Tiempo en minutos
+- No escribas nada fuera del JSON`
       })
     });
 
     const data = await response.json();
 
-    const limpio = extraerJSONSeguro(data);
+    let raw = data.output_text;
 
-    if (!limpio) {
-      return res.json({ error: "No se pudo extraer JSON" });
+    if (!raw && data.output && data.output[0]?.content) {
+      raw = data.output[0].content
+        .map(c => c.text || "")
+        .join("");
     }
 
-    let parsed;
+    const limpio = raw
+      ?.replace(/```json/g, "")
+      ?.replace(/```/g, "")
+      ?.trim();
 
-    try {
-      parsed = JSON.parse(limpio);
-    } catch (e) {
-      return res.json({ error: "JSON inválido", raw: limpio });
-    }
+    const parsed = JSON.parse(limpio);
 
     res.json(parsed);
 
