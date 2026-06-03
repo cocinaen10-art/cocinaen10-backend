@@ -9,7 +9,7 @@ app.use(express.json());
 // 🔹 API KEY (una sola)
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-// 🔹 Ruta test
+// 🔹 Ruta tAest
 app.get("/", (req, res) => {
   res.send("Servidor activo");
 });
@@ -30,10 +30,37 @@ app.get("/ingredients", (req, res) => {
     "pasta",
     "cebolla",
     "ajo",
-    "lechuga"
+    "lechuga",
+    "patata",
+    "atun",
+    "zanahoria",
+    "pimiento",
+    "jamon",
+    "bacon",
+    "nata",
+    "mantequilla",
+    "champinones",
+    "maiz",
+    "lomo",
+    "salchichas",
+    "pepino",
+    "calabacin",
+    "berenjena",
+    "lentejas",
+    "garbanzos",
+    "judias",
+    "salmon",
+    "merluza",
+    "gambas",
+    "jamon york",
+    "puerro",
+    "alubias rojas",
+
   ];
 
-  const resultados = ingredientes.filter(i => i.includes(q));
+  const resultados = ingredientes.filter(
+    i => i.startsWith(q)
+  );
 
   res.json(resultados);
 });
@@ -116,8 +143,12 @@ Devuelve SOLO JSON:
     } catch (e) {
       return res.json({ error: "JSON inválido", raw: limpio });
     }
+      parsed.opcion_1.imagen =
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
 
-    res.json(parsed);
+      parsed.opcion_2.imagen =
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd";
+          res.json(parsed);
 
   } catch (error) {
     console.error(error);
