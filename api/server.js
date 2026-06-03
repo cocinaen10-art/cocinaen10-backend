@@ -87,6 +87,51 @@ function extraerJSONSeguro(data) {
   return raw.substring(inicio, fin + 1);
 }
 
+function getImageForRecipe(nombre) {
+
+  const texto = nombre.toLowerCase();
+
+  if (
+    texto.includes("pollo")
+  ) {
+    return "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d";
+  }
+
+  if (
+    texto.includes("pasta")
+  ) {
+    return "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9";
+  }
+
+  if (
+    texto.includes("arroz")
+  ) {
+    return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
+  }
+
+  if (
+    texto.includes("pizza")
+  ) {
+    return "https://images.unsplash.com/photo-1513104890138-7c749659a591";
+  }
+
+  if (
+    texto.includes("ensalada")
+  ) {
+    return "https://images.unsplash.com/photo-1546793665-c74683f339c1";
+  }
+
+  if (
+    texto.includes("pescado") ||
+    texto.includes("salmon") ||
+    texto.includes("merluza")
+  ) {
+    return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
+  }
+
+  return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
+}
+
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
   try {
@@ -144,11 +189,10 @@ Devuelve SOLO JSON:
       return res.json({ error: "JSON inválido", raw: limpio });
     }
       parsed.opcion_1.imagen =
-        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
+  getImageForRecipe(parsed.opcion_1.nombre);
 
-      parsed.opcion_2.imagen =
-        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd";
-          res.json(parsed);
+  parsed.opcion_2.imagen =
+    getImageForRecipe(parsed.opcion_2.nombre);
 
   } catch (error) {
     console.error(error);
