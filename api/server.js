@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
+const recipeImages = require("./data/recipeImages");
 
 app.use(cors());
 app.use(express.json());
@@ -86,7 +86,9 @@ function extraerJSONSeguro(data) {
 
   return raw.substring(inicio, fin + 1);
 }
-
+function getRandomItem(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
 function getImageForRecipe(nombre) {
 
   const texto = nombre.toLowerCase();
@@ -94,7 +96,7 @@ function getImageForRecipe(nombre) {
   if (
     texto.includes("pollo")
   ) {
-    return "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d";
+    return getRandomItem(recipeImages.pollo);
   }
 
   if (
