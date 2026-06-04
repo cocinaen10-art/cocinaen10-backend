@@ -135,8 +135,12 @@ function getImageForRecipe(nombre) {
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
   try {
-    const ingredientes = req.query.ing || "huevos, pan";
+    console.log("RECETA INICIO");
 
+    const ingredientes = req.query.ing || "huevos, pan";
+    
+    console.log("OPENAI REQUEST");
+    
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
@@ -173,6 +177,8 @@ Devuelve SOLO JSON:
       })
     });
 
+    console.log("OPENAI RESPONSE");
+
     const data = await response.json();
 
     const limpio = extraerJSONSeguro(data);
@@ -193,6 +199,9 @@ Devuelve SOLO JSON:
 
   parsed.opcion_2.imagen =
     getImageForRecipe(parsed.opcion_2.nombre);
+    console.log("RESPUESTA ENVIADA");
+
+    res.json(parsed);
 
   } catch (error) {
     console.error(error);
@@ -226,6 +235,8 @@ Devuelve SOLO JSON:
       })
     });
 
+    console.log("OPENAI RESPONSE"); 
+
     const data = await response.json();
 
     const limpio = extraerJSONSeguro(data);
@@ -243,6 +254,8 @@ Devuelve SOLO JSON:
     }
 
     res.json(parsed);
+
+    console.log("RESPUESTA ENVIADA");
 
   } catch (error) {
     console.error(error);
