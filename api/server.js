@@ -90,54 +90,60 @@ function getRandomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 function getImageForRecipe(nombre) {
-
+  // Convertimos el texto a minúsculas para buscar sin importar mayúsculas
   const texto = nombre.toLowerCase();
-  if (
-    texto.includes("sopa")
-  ) {
-    return "https://images.unsplash.com/photo-1547592180-85f173990554";
-  }
-  if (
-    texto.includes("pollo")
-  ) {
-    return getRandomItem(recipeImages.pollo);
+  
+  // 1. EVALUAMOS PRIMERO COMBINACIONES ESPECÍFICAS DE POLLO (Subcategorías inteligentes)
+  if (texto.includes("pollo")) {
+    if (texto.includes("sopa") || texto.includes("caldo")) {
+      return getRandomItem(recipeImages.sopaPollo);
+    }
+    if (texto.includes("arroz") || texto.includes("paella")) {
+      return getRandomItem(recipeImages.arrozPollo);
+    }
+    if (texto.includes("pasta") || texto.includes("macarrones") || texto.includes("tallarines")) {
+      return getRandomItem(recipeImages.pastaPollo);
+    }
+    if (texto.includes("ensalada")) {
+      return getRandomItem(recipeImages.ensaladaPollo);
+    }
+    // Si la receta tiene pollo pero no es ninguna de las anteriores (ej: pollo asado, pechugas)
+    return getRandomItem(recipeImages.polloGenerico);
   }
 
-  if (
-    texto.includes("pasta")
-  ) {
-    return getRandomItem(recipeImages.pasta);
+  // 2. CATEGORÍA: PASTA GENÉRICA
+  if (texto.includes("pasta") || texto.includes("macarrones") || texto.includes("spaghetti") || texto.includes("tallarines")) {
+    return getRandomItem(recipeImages.pastaGenerica);
   }
 
-  if (
-    texto.includes("arroz")
-  ) {
+  // 3. CATEGORÍA: SOPAS GENÉRICAS (sin pollo)
+  if (texto.includes("sopa") || texto.includes("caldo") || texto.includes("crema")) {
+    return "https://images.unsplash.com/photo-1608500218808-335ca0c8afc8";
+  }
+
+  // 4. CATEGORÍA: ARROZ GENÉRICO (sin pollo)
+  if (texto.includes("arroz")) {
     return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
   }
 
-  if (
-    texto.includes("pizza")
-  ) {
+  // 5. CATEGORÍA: PIZZA
+  if (texto.includes("pizza")) {
     return "https://images.unsplash.com/photo-1513104890138-7c749659a591";
   }
 
-  if (
-    texto.includes("ensalada")
-  ) {
+  // 6. CATEGORÍA: ENSALADA GENÉRICA (sin pollo)
+  if (texto.includes("ensalada")) {
     return "https://images.unsplash.com/photo-1546793665-c74683f339c1";
   }
 
-  if (
-    texto.includes("pescado") ||
-    texto.includes("salmon") ||
-    texto.includes("merluza")
-  ) {
+  // 7. CATEGORÍA: PESCADOS
+  if (texto.includes("pescado") || texto.includes("salmon") || texto.includes("merluza")) {
     return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
   }
 
-  return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
+  // 8. COMODÍN / IMAGEN DE RESPALDO (Si la IA inventa algo que no encaja en lo anterior)
+  return getRandomItem(recipeImages.comodin);
 }
-
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
   try {
