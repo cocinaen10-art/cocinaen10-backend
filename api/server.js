@@ -86,11 +86,6 @@ function extraerJSONSeguro(data) {
 
   return raw.substring(inicio, fin + 1);
 }
-function getRandomItem(array) {
-  if (!array || array.length === 0) return null;
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
-}
 
 function getImageForRecipe(nombre) {
   const texto = nombre.toLowerCase();
@@ -120,7 +115,7 @@ function getImageForRecipe(nombre) {
   }
 
   if (texto.includes("arroz")) {
-    return getRandomItem(recipeImages.arrozGenerica);
+    return getRandomItem(recipeImages.arrozGenerico);
   }
 
   if (texto.includes("pizza")) {
