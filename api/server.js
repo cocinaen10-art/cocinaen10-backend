@@ -102,7 +102,7 @@ function getImageForRecipe(nombre) {
   if (
     texto.includes("pasta")
   ) {
-    return "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9";
+    return getRandomItem(recipeImages.pasta);
   }
 
   if (

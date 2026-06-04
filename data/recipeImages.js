@@ -4,6 +4,12 @@ const recipeImages = {
     "https://images.unsplash.com/photo-1527477396000-e27163b481c2",
     "https://images.unsplash.com/photo-1600891964092-4316c288032e",
   ],
+
+  pasta: [
+    "url1",
+    "url2",
+    "url3",
+  ],
 };
 
 module.exports = recipeImages;
