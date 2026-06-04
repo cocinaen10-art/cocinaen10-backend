@@ -86,51 +86,44 @@ function extraerJSONSeguro(data) {
 
   return raw.substring(inicio, fin + 1);
 }
+function getRandomItem(array) {
+  if (!array || array.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
 
 function getImageForRecipe(nombre) {
   const texto = nombre.toLowerCase();
   
+  if (texto.includes("sopa")) {
+    return "https://images.unsplash.com/photo-1608500218808-335ca0c8afc8";
+  }
+  
   if (texto.includes("pollo")) {
-    if (texto.includes("sopa") || texto.includes("caldo")) {
-      return getRandomItem(recipeImages.sopaPollo);
-    }
-    if (texto.includes("arroz") || texto.includes("paella")) {
-      return getRandomItem(recipeImages.arrozPollo);
-    }
-    if (texto.includes("pasta") || texto.includes("macarrones") || texto.includes("tallarines")) {
-      return getRandomItem(recipeImages.pastaPollo);
-    }
-    if (texto.includes("ensalada")) {
-      return getRandomItem(recipeImages.ensaladaPollo);
-    }
-    return getRandomItem(recipeImages.polloGenerico);
+    return getRandomItem(recipeImages.pollo);
   }
 
-  if (texto.includes("pasta") || texto.includes("macarrones") || texto.includes("spaghetti") || texto.includes("tallarines")) {
-    return getRandomItem(recipeImages.pastaGenerica);
-  }
-
-  if (texto.includes("sopa") || texto.includes("caldo") || texto.includes("crema")) {
-    return getRandomItem(recipeImages.sopaGenerica);
+  if (texto.includes("pasta")) {
+    return getRandomItem(recipeImages.pasta);
   }
 
   if (texto.includes("arroz")) {
-    return getRandomItem(recipeImages.arrozGenerico);
+    return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
   }
 
   if (texto.includes("pizza")) {
-    return getRandomItem(recipeImages.pizza);
+    return "https://images.unsplash.com/photo-1513104890138-7c749659a591";
   }
 
   if (texto.includes("ensalada")) {
-    return getRandomItem(recipeImages.ensaladaGenerica);
+    return "https://images.unsplash.com/photo-1546793665-c74683f339c1";
   }
 
   if (texto.includes("pescado") || texto.includes("salmon") || texto.includes("merluza")) {
-    return getRandomItem(recipeImages.pescado);
+    return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
   }
 
-  return getRandomItem(recipeImages.comodin);
+  return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
 }
 
 // 🔹 RECETAS (Modo ingredientes)
