@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const recipeImages = require("./data/recipeImages");
+const recipeImages = require("../data/recipeImages");
 
 app.use(cors());
 app.use(express.json());
