@@ -92,7 +92,11 @@ function getRandomItem(array) {
 function getImageForRecipe(nombre) {
 
   const texto = nombre.toLowerCase();
-
+  if (
+    texto.includes("sopa")
+  ) {
+    return "https://images.unsplash.com/photo-1547592180-85f173990554";
+  }
   if (
     texto.includes("pollo")
   ) {

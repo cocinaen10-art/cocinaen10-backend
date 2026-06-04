@@ -1,7 +1,6 @@
 const recipeImages = {
   pollo: [
-    "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d",
-    "https://images.unsplash.com/photo-1527477396000-e27163b481c2",
+    "https://images.unsplash.com/photo-1532550907401-a500c9a57435",
   ],
 
   pasta: [
