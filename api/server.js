@@ -87,13 +87,14 @@ function extraerJSONSeguro(data) {
   return raw.substring(inicio, fin + 1);
 }
 function getRandomItem(array) {
-  return array[Math.floor(Math.random() * array.length)];
+  if (!array || array.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
 }
+
 function getImageForRecipe(nombre) {
-  // Convertimos el texto a minúsculas para buscar sin importar mayúsculas
   const texto = nombre.toLowerCase();
   
-  // 1. EVALUAMOS PRIMERO COMBINACIONES ESPECÍFICAS DE POLLO (Subcategorías inteligentes)
   if (texto.includes("pollo")) {
     if (texto.includes("sopa") || texto.includes("caldo")) {
       return getRandomItem(recipeImages.sopaPollo);
@@ -107,41 +108,33 @@ function getImageForRecipe(nombre) {
     if (texto.includes("ensalada")) {
       return getRandomItem(recipeImages.ensaladaPollo);
     }
-    // Si la receta tiene pollo pero no es ninguna de las anteriores (ej: pollo asado, pechugas)
     return getRandomItem(recipeImages.polloGenerico);
   }
 
-  // 2. CATEGORÍA: PASTA GENÉRICA
   if (texto.includes("pasta") || texto.includes("macarrones") || texto.includes("spaghetti") || texto.includes("tallarines")) {
     return getRandomItem(recipeImages.pastaGenerica);
   }
 
-  // 3. CATEGORÍA: SOPAS GENÉRICAS (sin pollo)
   if (texto.includes("sopa") || texto.includes("caldo") || texto.includes("crema")) {
-    return "https://images.unsplash.com/photo-1608500218808-335ca0c8afc8";
+    return getRandomItem(recipeImages.sopaGenerica);
   }
 
-  // 4. CATEGORÍA: ARROZ GENÉRICO (sin pollo)
   if (texto.includes("arroz")) {
-    return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
+    return getRandomItem(recipeImages.arrozGenerica);
   }
 
-  // 5. CATEGORÍA: PIZZA
   if (texto.includes("pizza")) {
-    return "https://images.unsplash.com/photo-1513104890138-7c749659a591";
+    return getRandomItem(recipeImages.pizza);
   }
 
-  // 6. CATEGORÍA: ENSALADA GENÉRICA (sin pollo)
   if (texto.includes("ensalada")) {
-    return "https://images.unsplash.com/photo-1546793665-c74683f339c1";
+    return getRandomItem(recipeImages.ensaladaGenerica);
   }
 
-  // 7. CATEGORÍA: PESCADOS
   if (texto.includes("pescado") || texto.includes("salmon") || texto.includes("merluza")) {
-    return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
+    return getRandomItem(recipeImages.pescado);
   }
 
-  // 8. COMODÍN / IMAGEN DE RESPALDO (Si la IA inventa algo que no encaja en lo anterior)
   return getRandomItem(recipeImages.comodin);
 }
 // 🔹 RECETAS (Modo ingredientes)
