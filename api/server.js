@@ -137,6 +137,7 @@ function getImageForRecipe(nombre) {
 
   return getRandomItem(recipeImages.comodin);
 }
+
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
   try {
