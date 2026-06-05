@@ -39,6 +39,35 @@ const recipeImages = {
     "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=600&q=80&sig=20",
     "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=600&q=80&sig=21",
     "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80&sig=22"
+  ],
+  // --- ESTO ES LO QUE TE FALTABA COMPLEMENTAR ---
+  sopaGenerica: [
+    "https://images.unsplash.com/photo-1608500218808-335ca0c8afc8?auto=format&fit=crop&w=600&q=80&sig=30",
+    "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80&sig=31"
+  ],
+  arrozGenerico: [
+    "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80&sig=32",
+    "https://images.unsplash.com/photo-1536304997881-a372c179924b?auto=format&fit=crop&w=600&q=80&sig=33"
+  ],
+  pizza: [
+    "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80&sig=34",
+    "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=600&q=80&sig=35"
+  ],
+  ensaladaGenerica: [
+    "https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=600&q=80&sig=36",
+    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80&sig=37"
+  ],
+  salmon: [
+    "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&sig=38",
+    "https://images.unsplash.com/photo-1560717789-0ac7c58ac90a?auto=format&fit=crop&w=600&q=80&sig=39"
+  ],
+  merluzaBlanco: [
+    "https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?auto=format&fit=crop&w=600&q=80&sig=40",
+    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=600&q=80&sig=41"
+  ],
+  pescadoGenerico: [
+    "https://images.unsplash.com/photo-1529563060578-3bd3abcdf737?auto=format&fit=crop&w=600&q=80&sig=42",
+    "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80&sig=43"
   ]
 };
 
