@@ -1,7 +1,7 @@
 const recipeImages = {
   pollo: [
-    "https://images.unsplash.com/photo-1532550907401-a500c9a57435",
-  ],
+  "https://images.pexels.com/photos/616354/pexels-photo-616354.jpeg",
+],
 
   pasta: [
     "url1",
