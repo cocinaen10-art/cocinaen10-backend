@@ -87,62 +87,55 @@ function extraerJSONSeguro(data) {
   return raw.substring(inicio, fin + 1);
 }
 function getRandomItem(array) {
-  if (!array || array.length === 0) return null;
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
+  return array[Math.floor(Math.random() * array.length)];
 }
-
 function getImageForRecipe(nombre) {
+
   const texto = nombre.toLowerCase();
-  
-  // 1. FILTRO PARA POLLO (Y SUS VARIACIONES)
-  if (texto.includes("pollo")) {
-    if (texto.includes("sopa") || texto.includes("caldo")) {
-      return getRandomItem(recipeImages.sopaPollo);
-    }
-    if (texto.includes("arroz") || texto.includes("paella")) {
-      return getRandomItem(recipeImages.arrozPollo);
-    }
-    if (texto.includes("pasta") || texto.includes("macarrones") || texto.includes("tallarines")) {
-      return getRandomItem(recipeImages.pastaPollo);
-    }
-    if (texto.includes("ensalada")) {
-      return getRandomItem(recipeImages.ensaladaPollo);
-    }
-    return getRandomItem(recipeImages.polloGenerico);
-  }
-
-  // 2. FILTRO PARA PESCADOS ESPECÍFICOS (Evita que salgan duplicados o erróneos)
-  if (texto.includes("salmon") || texto.includes("salmón")) {
-    return getRandomItem(recipeImages.salmon);
-  }
-  if (texto.includes("merluza") || texto.includes("bacalao") || texto.includes("pescado blanco")) {
-    return getRandomItem(recipeImages.merluzaBlanco);
-  }
-  if (texto.includes("pescado") || texto.includes("atun") || texto.includes("atún")) {
-    return getRandomItem(recipeImages.pescadoGenerico);
-  }
-
-  // 3. OTRAS CATEGORÍAS GENERALES
-  if (texto.includes("pasta") || texto.includes("macarrones") || texto.includes("spaghetti") || texto.includes("tallarines")) {
-    return getRandomItem(recipeImages.pastaGenerica);
-  }
-  if (texto.includes("sopa") || texto.includes("caldo") || texto.includes("crema")) {
-    return getRandomItem(recipeImages.sopaGenerica);
-  }
-  if (texto.includes("arroz")) {
-    return getRandomItem(recipeImages.arrozGenerico);
-  }
-  if (texto.includes("pizza")) {
-    return getRandomItem(recipeImages.pizza);
-  }
-  if (texto.includes("ensalada")) {
-    return getRandomItem(recipeImages.ensaladaGenerica);
-  }
-
-  // 4. COMODÍN SI NO COINCIDE CON NINGUNA PALABRA CLAVE
-  return getRandomItem(recipeImages.comodin);
+  if (
+  texto.includes("salteado")
+) {
+  return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
 }
+  
+  if (
+    texto.includes("pasta")
+  ) {
+    return getRandomItem(recipeImages.pasta);
+  }
+
+  if (
+    texto.includes("arroz")
+  ) {
+    return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
+  }
+
+  if (
+    texto.includes("pizza")
+  ) {
+    return "https://images.unsplash.com/photo-1513104890138-7c749659a591";
+  }
+
+  if (
+    texto.includes("ensalada")
+  ) {
+    return "https://images.unsplash.com/photo-1546793665-c74683f339c1";
+  }
+
+  if (
+    texto.includes("pescado") ||
+    texto.includes("salmon") ||
+    texto.includes("merluza")
+  ) {
+    return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
+  }
+  if (
+      texto.includes("pollo")
+    ) {
+      return getRandomItem(recipeImages.pollo);
+    }
+    return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
+  }
 
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
