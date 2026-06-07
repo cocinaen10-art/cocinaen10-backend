@@ -143,9 +143,9 @@ app.get("/recipes", async (req, res) => {
     console.log("RECETA INICIO");
 
     const ingredientes = req.query.ing || "huevos, pan";
-    
+
     console.log("OPENAI REQUEST");
-    
+
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
@@ -156,20 +156,24 @@ app.get("/recipes", async (req, res) => {
         model: "gpt-4.1-mini",
         input: `Tengo estos ingredientes: ${ingredientes}.
 
-Quiero 2 recetas REALISTAS, rápidas y prácticas.
+Quiero 1 receta REALISTA, rápida y práctica.
+
+La receta debe parecer escrita por alguien que cocina en casa.
+
+IMPORTANTE:
+- NO uses frases genéricas
+- NO digas "según las instrucciones del paquete"
+- NO digas "al gusto"
+- NO des consejos vagos
+- Da cantidades y tiempos concretos cuando tenga sentido
+- Usa pasos cortos y claros
+- Cocina simple y realista
+- Máximo 5 pasos
+- La receta debe sentirse rápida, útil y humana
 
 Devuelve SOLO JSON:
 {
   "opcion_1": {
-    "nombre": "",
-    "tiempo": "",
-    "coste": "",
-    "por_que": "",
-    "ingredientes_usados": [],
-    "ingredientes_extra": [],
-    "pasos": []
-  },
-  "opcion_2": {
     "nombre": "",
     "tiempo": "",
     "coste": "",
@@ -199,11 +203,10 @@ Devuelve SOLO JSON:
     } catch (e) {
       return res.json({ error: "JSON inválido", raw: limpio });
     }
-      parsed.opcion_1.imagen =
-  getImageForRecipe(parsed.opcion_1.nombre);
 
-  parsed.opcion_2.imagen =
-    getImageForRecipe(parsed.opcion_2.nombre);
+    parsed.opcion_1.imagen =
+      getImageForRecipe(parsed.opcion_1.nombre);
+
     console.log("RESPUESTA ENVIADA");
 
     res.json(parsed);
@@ -240,7 +243,7 @@ Devuelve SOLO JSON:
       })
     });
 
-    console.log("OPENAI RESPONSE"); 
+    console.log("OPENAI RESPONSE");
 
     const data = await response.json();
 
