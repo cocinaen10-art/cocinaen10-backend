@@ -204,9 +204,6 @@ Devuelve SOLO JSON:
       return res.json({ error: "JSON inválido", raw: limpio });
     }
 
-    parsed.opcion_1.imagen =
-      getImageForRecipe(parsed.opcion_1.nombre);
-
     console.log("RESPUESTA ENVIADA");
 
     res.json(parsed);
