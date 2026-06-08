@@ -138,10 +138,10 @@ function getImageForRecipe(nombre) {
     return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
   }
   if (
-      texto.includes("pollo")
-    ) {
-      return getRandomItem(recipeImages.pollo);
-    }
+    texto.includes("pollo")
+  ) {
+    return getRandomItem(recipeImages.pollo);
+  }
     return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
   }
 
