@@ -89,6 +89,14 @@ function extraerJSONSeguro(data) {
 function getRandomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
+
+const recipeImages = {
+  pollo: [
+    "https://images.unsplash.com/photo-1604503468506-a8da13d82791",
+    "https://images.unsplash.com/photo-1587593810167-a84920ea0781",
+    "https://images.unsplash.com/photo-1527477396000-e27163b481c2",
+  ],
+};
 function getImageForRecipe(nombre) {
 
   const texto = nombre.toLowerCase();
