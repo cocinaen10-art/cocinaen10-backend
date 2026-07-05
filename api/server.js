@@ -90,53 +90,47 @@ function getRandomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function getImageForRecipe(nombre) {
+function getImageForRecipe(categoria) {
 
-  const texto = nombre.toLowerCase();
-  if (
-  texto.includes("salteado")
-) {
-  return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
-}
-  
-  if (
-    texto.includes("pasta")
-  ) {
-    return getRandomItem(recipeImages.pasta);
-  }
+  try {
+    const texto = (categoria || "").toLowerCase();
 
-  if (
-    texto.includes("arroz")
-  ) {
-    return "https://images.unsplash.com/photo-1512058564366-18510be2db19";
-  }
+    // 🔴 PRIORIDAD 1: pollo
+    if (texto.includes("pollo")) {
+      return getRandomItem(recipeImages.pollo);
+    }
 
-  if (
-    texto.includes("pizza")
-  ) {
-    return "https://images.unsplash.com/photo-1513104890138-7c749659a591";
-  }
+    // 🔴 PRIORIDAD 2: pescado
+    if (
+      texto.includes("salmon") ||
+      texto.includes("merluza") ||
+      texto.includes("pescado")
+    ) {
+      return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
+    }
 
-  if (
-    texto.includes("ensalada")
-  ) {
-    return "https://images.unsplash.com/photo-1546793665-c74683f339c1";
-  }
+    // 🔴 PRIORIDAD 3: pasta
+    if (texto.includes("pasta") || texto.includes("espagueti")) {
+      return getRandomItem(recipeImages.pasta);
+    }
 
-  if (
-    texto.includes("pescado") ||
-    texto.includes("salmon") ||
-    texto.includes("merluza")
-  ) {
-    return "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2";
-  }
-  if (
-    texto.includes("pollo")
-  ) {
-    return getRandomItem(recipeImages.pollo);
-  }
+    // 🔴 PRIORIDAD 4: arroz
+    if (texto.includes("arroz")) {
+      return getRandomItem(recipeImages.arroz);
+    }
+
+    // 🔴 PRIORIDAD 5: ensalada
+    if (texto.includes("ensalada")) {
+      return "https://images.unsplash.com/photo-1546793665-c74683f339c1";
+    }
+
+    // 🔴 fallback seguro
+    return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
+
+  } catch (e) {
     return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
   }
+}
 
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
@@ -171,25 +165,48 @@ IMPORTANTE:
 - Cocina simple y realista
 - Máximo 5 pasos
 - La receta debe sentirse rápida, útil y humana
+- Añade también una categoria de la receta: huevo, pollo, pasta, arroz, pescado o ensalada.
 
-Devuelve SOLO JSON:
+Devuelve SOLO JSON EXACTO, sin excepciones.
+
+OBLIGATORIO: el JSON debe incluir SIEMPRE el campo "categoria".
+
+Valores permitidos:
+huevo | pollo | pasta | arroz | pescado | ensalada
+
+Si no se puede decidir, usa "otros".
+
+Formato exacto:
+
 {
   "opcion_1": {
     "nombre": "",
+    "categoria": "",
     "tiempo": "",
     "coste": "",
     "por_que": "",
     "ingredientes_usados": [],
     "ingredientes_extra": [],
-    "pasos": []
+    "pasos": [],
+    "truco": ""
   }
-}`
+}
+
+El campo "categoria" es OBLIGATORIO y debe ser uno de estos valores:
+huevo, pollo, pasta, arroz, pescado, ensalada.`,
+
       })
     });
 
     console.log("OPENAI RESPONSE");
 
     const data = await response.json();
+
+    console.log("OUTPUT_TEXT:");
+    console.log(data.output_text);
+
+    console.log("JSON EXTRAIDO:");
+    console.log(extraerJSONSeguro(data));
 
     const limpio = extraerJSONSeguro(data);
 
@@ -204,6 +221,7 @@ Devuelve SOLO JSON:
     } catch (e) {
       return res.json({ error: "JSON inválido", raw: limpio });
     }
+    console.log("CATEGOIA:", parsed.opcion_1);
 
     console.log("RESPUESTA ENVIADA");
 
@@ -246,6 +264,8 @@ Devuelve SOLO JSON:
     const data = await response.json();
 
     const limpio = extraerJSONSeguro(data);
+    console.log("JSON LIMPIO:");
+    console.log(limpio);
 
     if (!limpio) {
       return res.json({ error: "No se pudo extraer JSON" });

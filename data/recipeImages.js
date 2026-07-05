@@ -10,6 +10,11 @@ const recipeImages = {
     "url2",
     "url3",
   ],
+  arroz: [
+  "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg",
+  "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
+  "https://images.pexels.com/photos/2092906/pexels-photo-2092906.jpeg",
+],
 };
 
 module.exports = recipeImages;
