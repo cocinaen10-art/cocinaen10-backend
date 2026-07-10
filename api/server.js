@@ -201,7 +201,13 @@ Reglas:
   Media
   Difícil
 
-Si falta cualquiera de estos campos, la respuesta será incorrecta.
+No omitas ningún campo del JSON.
+
+Todos los campos son obligatorios.
+
+Si no conoces un valor, genera el valor más razonable según la receta.
+
+Nunca elimines un campo del JSON.
 
 Formato exacto:
 
