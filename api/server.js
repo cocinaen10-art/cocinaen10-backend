@@ -169,12 +169,39 @@ IMPORTANTE:
 
 Devuelve SOLO JSON EXACTO, sin excepciones.
 
-OBLIGATORIO: el JSON debe incluir SIEMPRE el campo "categoria".
+OBLIGATORIO:
 
-Valores permitidos:
-huevo | pollo | pasta | arroz | pescado | ensalada
+El JSON debe incluir SIEMPRE estos campos:
 
-Si no se puede decidir, usa "otros".
+- nombre
+- categoria
+- tiempo
+- personas
+- dificultad
+- coste
+- por_que
+- ingredientes_usados
+- ingredientes_extra
+- pasos
+- truco
+
+Reglas:
+
+- "categoria" solo puede ser:
+  huevo | pollo | pasta | arroz | pescado | ensalada | otros
+
+- "personas" es obligatorio.
+  Debe indicar el número de raciones.
+  Ejemplo:
+  "2 personas"
+
+- "dificultad" es obligatoria.
+  Solo puede contener uno de estos valores:
+  Fácil
+  Media
+  Difícil
+
+Si falta cualquiera de estos campos, la respuesta será incorrecta.
 
 Formato exacto:
 
