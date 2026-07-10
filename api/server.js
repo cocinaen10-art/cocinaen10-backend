@@ -191,9 +191,16 @@ Reglas:
   huevo | pollo | pasta | arroz | pescado | ensalada | otros
 
 - "personas" es obligatorio.
-  Debe indicar el número de raciones.
-  Ejemplo:
-  "2 personas"
+  Debe ser un número entero que indique las raciones reales de la receta.
+
+Ejemplos válidos:
+1
+2
+4
+6
+
+Nunca escribas "persona" ni "personas".
+Devuelve únicamente el número.
 
 - "dificultad" es obligatoria.
   Solo puede contener uno de estos valores:
@@ -216,7 +223,7 @@ Formato exacto:
     "nombre": "",
     "categoria": "",
     "tiempo": "",
-    "personas": "",
+    "personas": 0,
     "dificultad": "",
     "coste": "",
     "por_que": "",
