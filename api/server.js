@@ -183,6 +183,8 @@ Formato exacto:
     "nombre": "",
     "categoria": "",
     "tiempo": "",
+    "personas": "",
+    "dificultad": "",
     "coste": "",
     "por_que": "",
     "ingredientes_usados": [],
