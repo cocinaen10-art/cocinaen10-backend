@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -9,7 +10,9 @@ app.use(express.json());
 // 🔹 API KEY (una sola)
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-// 🔹 Ruta tAest
+console.log("OPENAI_API_KEY:", OPENAI_API_KEY ? "CARGADA" : "NO CARGADA");
+
+// 🔹 Ruta test
 app.get("/", (req, res) => {
   res.send("Servidor activo");
 });
@@ -69,15 +72,16 @@ app.get("/ingredients", (req, res) => {
 function extraerJSONSeguro(data) {
   let raw = data.output_text;
 
-  if (!raw && data.output && data.output[0]?.content) {
-    raw = data.output[0].content
-      .map(c => c.text || "")
-      .join("");
+  if (!raw && Array.isArray(data.output)) {
+    raw = data.output
+      .flatMap(o => o.content || [])
+      .map(c => c.text?.trim?.() || c.text || "")
+      .join("\n");
   }
 
   if (!raw) return null;
 
-  raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
+  raw = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
 
   const inicio = raw.indexOf("{");
   const fin = raw.lastIndexOf("}");
@@ -131,15 +135,61 @@ function getImageForRecipe(categoria) {
     return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
   }
 }
+app.get("/recipes/decision", async (req, res) => {
+  try {
+    console.log("DECISION INICIO");
 
+    const ingredientes = req.query.ing || "huevos, pan";
+
+    console.log("Ingredientes:", ingredientes);
+
+    res.json({
+      needsDecision: true,
+      methods: [
+        {
+          id: "airfryer",
+          name: "Freidora de aire",
+          description: "Acabado crujiente con muy poco aceite."
+        },
+        {
+          id: "oven",
+          name: "Horno",
+          description: "Cocina todos los ingredientes al mismo tiempo."
+        },
+        {
+          id: "pan",
+          name: "Sartén",
+          description: "La opción más rápida para una comida casera."
+        }
+      ]
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Error al decidir el método de cocción."
+    });
+  }
+});
 // 🔹 RECETAS (Modo ingredientes)
 app.get("/recipes", async (req, res) => {
   try {
     console.log("RECETA INICIO");
 
     const ingredientes = req.query.ing || "huevos, pan";
+    const method = req.query.method || "";
+
+    console.log("================================");
+    console.log("REQUEST /recipes");
+    console.log("Ingredientes:", ingredientes);
+    console.log("Método:", method);
+    console.log("URL:", req.originalUrl);
+    console.log("================================");
 
     console.log("OPENAI REQUEST");
+    console.log("Método recibido:", method);
+    console.log("URL:", req.originalUrl);
 
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -150,6 +200,24 @@ app.get("/recipes", async (req, res) => {
       body: JSON.stringify({
         model: "gpt-4.1-mini",
         input: `Tengo estos ingredientes: ${ingredientes}.
+
+Método de cocción elegido (código interno): ${method}
+
+Equivalencias:
+
+- airfryer = freidora de aire
+- oven = horno
+- pan = sartén
+
+Debes utilizar EXCLUSIVAMENTE el método indicado por ese código.
+
+Si el código es "airfryer", toda la receta debe hacerse en freidora de aire.
+
+Si el código es "oven", toda la receta debe hacerse en horno.
+
+Si el código es "pan", toda la receta debe hacerse en sartén.
+
+No cambies de método durante la receta.
 
 Quiero 1 receta REALISTA, rápida y práctica.
 
@@ -243,6 +311,9 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
     console.log("OPENAI RESPONSE");
 
     const data = await response.json();
+
+    console.log("RESPUESTA COMPLETA OPENAI:");
+    console.log(JSON.stringify(data, null, 2));
 
     console.log("OUTPUT_TEXT:");
     console.log(data.output_text);
