@@ -94,6 +94,37 @@ function getRandomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+const cookingMethods = [
+  {
+    id: "airfryer",
+    name: "Freidora de aire",
+    description: "Para ingredientes que quedan bien dorados y crujientes.",
+    keywords: ["pollo", "patata", "salchichas", "lomo", "bacon", "calabacin", "berenjena", "zanahoria", "garbanzos", "pimiento", "gambas"],
+  },
+  {
+    id: "oven",
+    name: "Horno",
+    description: "Para asar y cocinar los ingredientes de forma uniforme.",
+    keywords: ["pollo", "patata", "salchichas", "lomo", "bacon", "calabacin", "berenjena", "zanahoria", "pimiento", "tomate", "puerro", "salmon", "merluza", "gambas", "queso"],
+  },
+  {
+    id: "pan",
+    name: "Sartén",
+    description: "La opción rápida para saltear, dorar o hacer una tortilla.",
+    keywords: ["huevos", "pan", "queso", "pollo", "arroz", "pasta", "cebolla", "ajo", "patata", "atun", "zanahoria", "pimiento", "jamon", "bacon", "nata", "mantequilla", "champinones", "maiz", "lomo", "salchichas", "calabacin", "berenjena", "lentejas", "garbanzos", "judias", "salmon", "merluza", "gambas", "jamon york", "puerro", "alubias rojas", "tomate", "leche", "aceite"],
+  },
+];
+
+function normalizarIngredientes(texto) {
+  return texto.split(",").map((ingrediente) => ingrediente.trim().toLowerCase()).filter(Boolean);
+}
+
+function metodosCompatibles(ingredientes) {
+  return cookingMethods
+    .filter((method) => ingredientes.some((ingredient) => method.keywords.includes(ingredient)))
+    .map(({ keywords, ...method }) => method);
+}
+
 function getImageForRecipe(categoria) {
 
   try {
@@ -137,32 +168,13 @@ function getImageForRecipe(categoria) {
 }
 app.get("/recipes/decision", async (req, res) => {
   try {
-    console.log("DECISION INICIO");
+    const ingredientes = normalizarIngredientes(req.query.ing || "");
+    if (ingredientes.length === 0) {
+      return res.status(400).json({ error: "Añade al menos un ingrediente." });
+    }
 
-    const ingredientes = req.query.ing || "huevos, pan";
-
-    console.log("Ingredientes:", ingredientes);
-
-    res.json({
-      needsDecision: true,
-      methods: [
-        {
-          id: "airfryer",
-          name: "Freidora de aire",
-          description: "Acabado crujiente con muy poco aceite."
-        },
-        {
-          id: "oven",
-          name: "Horno",
-          description: "Cocina todos los ingredientes al mismo tiempo."
-        },
-        {
-          id: "pan",
-          name: "Sartén",
-          description: "La opción más rápida para una comida casera."
-        }
-      ]
-    });
+    const methods = metodosCompatibles(ingredientes);
+    res.json({ needsDecision: methods.length > 1, methods });
 
   } catch (error) {
     console.error(error);
@@ -177,12 +189,23 @@ app.get("/recipes", async (req, res) => {
   try {
     console.log("RECETA INICIO");
 
-    const ingredientes = req.query.ing || "huevos, pan";
+    const ingredientes = normalizarIngredientes(req.query.ing || "");
     const method = req.query.method || "";
+
+    if (ingredientes.length === 0) {
+      return res.status(400).json({ error: "Añade al menos un ingrediente." });
+    }
+
+    const compatibleMethods = metodosCompatibles(ingredientes);
+    if (!compatibleMethods.some((item) => item.id === method)) {
+      return res.status(400).json({
+        error: "Ese método no es compatible con los ingredientes elegidos.",
+      });
+    }
 
     console.log("================================");
     console.log("REQUEST /recipes");
-    console.log("Ingredientes:", ingredientes);
+    console.log("Ingredientes:", ingredientes.join(", "));
     console.log("Método:", method);
     console.log("URL:", req.originalUrl);
     console.log("================================");
@@ -199,7 +222,7 @@ app.get("/recipes", async (req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: `Tengo estos ingredientes: ${ingredientes}.
+        input: `Tengo estos ingredientes: ${ingredientes.join(", ")}.
 
 Método de cocción elegido (código interno): ${method}
 
@@ -224,6 +247,10 @@ Quiero 1 receta REALISTA, rápida y práctica.
 La receta debe parecer escrita por alguien que cocina en casa.
 
 IMPORTANTE:
+- Usa ÚNICAMENTE los ingredientes indicados. No añadas aceite, sal, agua,
+  especias ni ningún otro ingrediente que no esté en la lista.
+- En "ingredientes_usados", escribe solo los nombres exactos de los
+  ingredientes recibidos, sin cantidades ni palabras añadidas.
 - NO uses frases genéricas
 - NO digas "según las instrucciones del paquete"
 - NO digas "al gusto"
@@ -249,7 +276,6 @@ El JSON debe incluir SIEMPRE estos campos:
 - coste
 - por_que
 - ingredientes_usados
-- ingredientes_extra
 - pasos
 - truco
 
@@ -296,7 +322,6 @@ Formato exacto:
     "coste": "",
     "por_que": "",
     "ingredientes_usados": [],
-    "ingredientes_extra": [],
     "pasos": [],
     "truco": ""
   }
@@ -312,19 +337,15 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
 
     const data = await response.json();
 
-    console.log("RESPUESTA COMPLETA OPENAI:");
-    console.log(JSON.stringify(data, null, 2));
-
-    console.log("OUTPUT_TEXT:");
-    console.log(data.output_text);
-
-    console.log("JSON EXTRAIDO:");
-    console.log(extraerJSONSeguro(data));
+    if (!response.ok) {
+      console.error("Error de OpenAI:", data.error?.message || response.status);
+      return res.status(502).json({ error: "No se pudo crear la receta." });
+    }
 
     const limpio = extraerJSONSeguro(data);
 
     if (!limpio) {
-      return res.json({ error: "No se pudo extraer JSON" });
+      return res.status(502).json({ error: "No se pudo crear una receta válida." });
     }
 
     let parsed;
@@ -332,9 +353,22 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
     try {
       parsed = JSON.parse(limpio);
     } catch (e) {
-      return res.json({ error: "JSON inválido", raw: limpio });
+      return res.status(502).json({ error: "No se pudo crear una receta válida." });
     }
-    console.log("CATEGOIA:", parsed.opcion_1);
+    const recipe = parsed.opcion_1;
+    if (!recipe || !Array.isArray(recipe.ingredientes_usados)) {
+      return res.status(502).json({ error: "La receta recibida no tiene un formato válido." });
+    }
+
+    const usaIngredienteNoDisponible = recipe.ingredientes_usados.some((ingredient) =>
+      !ingredientes.includes(String(ingredient).trim().toLowerCase()),
+    );
+
+    if (usaIngredienteNoDisponible) {
+      return res.status(502).json({ error: "La receta incluía ingredientes no disponibles." });
+    }
+
+    recipe.image = getImageForRecipe(recipe.categoria);
 
     console.log("RESPUESTA ENVIADA");
 
@@ -342,7 +376,7 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
 
   } catch (error) {
     console.error(error);
-    res.json({ error: "Error generando receta" });
+    res.status(500).json({ error: "Error generando receta" });
   }
 });
 
