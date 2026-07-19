@@ -166,6 +166,15 @@ function getImageForRecipe(categoria) {
     return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c";
   }
 }
+
+function optimizarImagen(url) {
+  const imageUrl = new URL(url);
+  imageUrl.searchParams.set("auto", "format");
+  imageUrl.searchParams.set("fit", "crop");
+  imageUrl.searchParams.set("w", "900");
+  imageUrl.searchParams.set("q", "80");
+  return imageUrl.toString();
+}
 app.get("/recipes/decision", async (req, res) => {
   try {
     const ingredientes = normalizarIngredientes(req.query.ing || "");
@@ -368,7 +377,7 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
       return res.status(502).json({ error: "La receta incluía ingredientes no disponibles." });
     }
 
-    recipe.image = getImageForRecipe(recipe.categoria);
+    recipe.image = optimizarImagen(getImageForRecipe(recipe.categoria));
 
     console.log("RESPUESTA ENVIADA");
 
