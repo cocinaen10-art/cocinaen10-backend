@@ -264,11 +264,13 @@ Quiero 1 receta REALISTA, rápida y práctica.
 
 La receta debe parecer escrita por alguien que cocina en casa.
 
-IMPORTANTE:
-- Usa ÚNICAMENTE los ingredientes indicados. No añadas aceite, sal, agua,
-  especias ni ningún otro ingrediente que no esté en la lista.
+DESPENSA BÁSICA SIEMPRE DISPONIBLE:
+- Puedes usar aceite, sal, vinagre, agua y pimienta cuando sean necesarios
+  para que la receta sea realista. No hace falta que aparezcan en la lista del usuario.
+- No añadas ningún otro ingrediente que no esté en la lista del usuario.
 - En "ingredientes_usados", escribe solo los nombres exactos de los
-  ingredientes recibidos, sin cantidades ni palabras añadidas.
+  ingredientes recibidos por el usuario. Nunca incluyas los básicos de cocina,
+  aunque los hayas usado en los pasos.
 - NO uses frases genéricas
 - NO digas "según las instrucciones del paquete"
 - NO digas "al gusto"
