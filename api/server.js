@@ -96,6 +96,12 @@ function getRandomItem(array) {
 
 const cookingMethods = [
   {
+    id: "no_cook",
+    name: "Sin cocción",
+    description: "Para preparar una ensalada o un plato frío al momento.",
+    keywords: ["lechuga", "pepino", "tomate", "maiz", "atun", "queso", "jamon york"],
+  },
+  {
     id: "airfryer",
     name: "Freidora de aire",
     description: "Para ingredientes que quedan bien dorados y crujientes.",
@@ -240,6 +246,7 @@ Equivalencias:
 - airfryer = freidora de aire
 - oven = horno
 - pan = sartén
+- no_cook = sin cocción
 
 Debes utilizar EXCLUSIVAMENTE el método indicado por ese código.
 
@@ -248,6 +255,8 @@ Si el código es "airfryer", toda la receta debe hacerse en freidora de aire.
 Si el código es "oven", toda la receta debe hacerse en horno.
 
 Si el código es "pan", toda la receta debe hacerse en sartén.
+
+Si el código es "no_cook", crea una receta fría y no uses ningún aparato de cocción.
 
 No cambies de método durante la receta.
 
@@ -376,8 +385,6 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
     if (usaIngredienteNoDisponible) {
       return res.status(502).json({ error: "La receta incluía ingredientes no disponibles." });
     }
-
-    recipe.image = optimizarImagen(getImageForRecipe(recipe.categoria));
 
     console.log("RESPUESTA ENVIADA");
 
