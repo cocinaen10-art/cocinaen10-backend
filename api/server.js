@@ -102,6 +102,24 @@ const cookingMethods = [
     keywords: ["lechuga", "pepino", "tomate", "maiz", "atun", "queso", "jamon york"],
   },
   {
+    id: "pot",
+    name: "Olla",
+    description: "Para cocer, guisar o preparar platos de cuchara.",
+    keywords: ["arroz", "pasta", "lentejas", "garbanzos", "judias", "alubias rojas", "patata", "pollo", "zanahoria", "puerro"],
+  },
+  {
+    id: "pressure_cooker",
+    name: "Olla a presión",
+    description: "Para legumbres y guisos que se preparan más rápido.",
+    keywords: ["lentejas", "garbanzos", "judias", "alubias rojas", "patata", "pollo", "zanahoria", "puerro"],
+  },
+  {
+    id: "steam",
+    name: "Al vapor",
+    description: "Para cocinar de forma suave verduras, pescado y marisco.",
+    keywords: ["calabacin", "berenjena", "zanahoria", "pimiento", "puerro", "patata", "salmon", "merluza", "gambas"],
+  },
+  {
     id: "airfryer",
     name: "Freidora de aire",
     description: "Para ingredientes que quedan bien dorados y crujientes.",
@@ -247,6 +265,9 @@ Equivalencias:
 - oven = horno
 - pan = sartén
 - no_cook = sin cocción
+- pot = olla
+- pressure_cooker = olla a presión
+- steam = al vapor
 
 Debes utilizar EXCLUSIVAMENTE el método indicado por ese código.
 
@@ -257,6 +278,12 @@ Si el código es "oven", toda la receta debe hacerse en horno.
 Si el código es "pan", toda la receta debe hacerse en sartén.
 
 Si el código es "no_cook", crea una receta fría y no uses ningún aparato de cocción.
+
+Si el código es "pot", toda la receta debe hacerse en olla.
+
+Si el código es "pressure_cooker", toda la receta debe hacerse en olla a presión.
+
+Si el código es "steam", toda la receta debe hacerse al vapor.
 
 No cambies de método durante la receta.
 
