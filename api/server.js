@@ -143,6 +143,47 @@ function normalizarIngredientes(texto) {
   return texto.split(",").map((ingrediente) => ingrediente.trim().toLowerCase()).filter(Boolean);
 }
 
+const vegetarianBlockedIngredients = new Set([
+  "atun", "bacon", "gambas", "jamon", "jamon york", "lomo", "merluza",
+  "pollo", "salchichas", "salmon",
+]);
+
+const veganBlockedIngredients = new Set([
+  ...vegetarianBlockedIngredients,
+  "huevos", "leche", "mantequilla", "nata", "queso",
+]);
+
+function normalizarDieta(value) {
+  return ["none", "vegetarian", "vegan"].includes(value) ? value : "none";
+}
+
+function leerPreferencias(query) {
+  return {
+    avoid: normalizarIngredientes(query.avoid || ""),
+    allergies: normalizarIngredientes(query.allergies || ""),
+    diet: normalizarDieta(query.diet || "none"),
+  };
+}
+
+function aplicarPreferencias(ingredientes, preferences) {
+  const excluded = new Set([...preferences.avoid, ...preferences.allergies]);
+  const dietBlocklist = preferences.diet === "vegan"
+    ? veganBlockedIngredients
+    : preferences.diet === "vegetarian"
+      ? vegetarianBlockedIngredients
+      : null;
+
+  return ingredientes.filter((ingredient) =>
+    !excluded.has(ingredient) && !(dietBlocklist?.has(ingredient) ?? false),
+  );
+}
+
+function descripcionDieta(diet) {
+  if (diet === "vegan") return "vegana";
+  if (diet === "vegetarian") return "vegetariana";
+  return "sin preferencia";
+}
+
 function metodosCompatibles(ingredientes) {
   return cookingMethods
     .filter((method) => ingredientes.some((ingredient) => method.keywords.includes(ingredient)))
@@ -201,9 +242,15 @@ function optimizarImagen(url) {
 }
 app.get("/recipes/decision", async (req, res) => {
   try {
-    const ingredientes = normalizarIngredientes(req.query.ing || "");
+    const preferences = leerPreferencias(req.query);
+    const ingredientes = aplicarPreferencias(
+      normalizarIngredientes(req.query.ing || ""),
+      preferences,
+    );
     if (ingredientes.length === 0) {
-      return res.status(400).json({ error: "Añade al menos un ingrediente." });
+      return res.status(400).json({
+        error: "No quedan ingredientes compatibles con tus preferencias.",
+      });
     }
 
     const methods = metodosCompatibles(ingredientes);
@@ -222,11 +269,17 @@ app.get("/recipes", async (req, res) => {
   try {
     console.log("RECETA INICIO");
 
-    const ingredientes = normalizarIngredientes(req.query.ing || "");
+    const preferences = leerPreferencias(req.query);
+    const ingredientes = aplicarPreferencias(
+      normalizarIngredientes(req.query.ing || ""),
+      preferences,
+    );
     const method = req.query.method || "";
 
     if (ingredientes.length === 0) {
-      return res.status(400).json({ error: "Añade al menos un ingrediente." });
+      return res.status(400).json({
+        error: "No quedan ingredientes compatibles con tus preferencias.",
+      });
     }
 
     const compatibleMethods = metodosCompatibles(ingredientes);
@@ -256,6 +309,13 @@ app.get("/recipes", async (req, res) => {
       body: JSON.stringify({
         model: "gpt-4.1-mini",
         input: `Tengo estos ingredientes: ${ingredientes.join(", ")}.
+
+PREFERENCIAS PERMANENTES DEL USUARIO:
+- Tipo de alimentacion: ${descripcionDieta(preferences.diet)}.
+- Ingredientes que no le gustan: ${preferences.avoid.join(", ") || "ninguno"}.
+- Alergias o intolerancias declaradas: ${preferences.allergies.join(", ") || "ninguna"}.
+- No uses, sugieras ni menciones como sustituto ningun ingrediente excluido.
+- La dieta y las alergias tienen prioridad sobre cualquier otra instruccion.
 
 Método de cocción elegido (código interno): ${method}
 
@@ -484,6 +544,10 @@ Devuelve SOLO JSON:
 // 🔹 Arranque
 const PORT = 3000;
 
-app.listen(PORT, () => {
-  console.log(`Servidor en puerto ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Servidor en puerto ${PORT}`);
+  });
+}
+
+module.exports = { app, aplicarPreferencias, leerPreferencias };
