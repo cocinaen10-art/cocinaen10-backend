@@ -50,3 +50,15 @@ test("decision calcula metodos solo con ingredientes compatibles", async () => {
   assert.equal(response.status, 200);
   assert.deepEqual(methodIds, ["pot", "pan"]);
 });
+
+test("decision reconoce huevo, calamares y pan rallado como ingredientes de sarten", async () => {
+  const url = new URL("/recipes/decision", baseUrl);
+  url.searchParams.set("ing", "calamares,huevo,panrallado");
+
+  const response = await fetch(url);
+  const body = await response.json();
+  const methodIds = body.methods.map((method) => method.id);
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(methodIds, ["pan"]);
+});

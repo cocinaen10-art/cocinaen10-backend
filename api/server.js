@@ -135,7 +135,7 @@ const cookingMethods = [
     id: "pan",
     name: "Sartén",
     description: "La opción rápida para saltear, dorar o hacer una tortilla.",
-    keywords: ["huevos", "pan", "queso", "pollo", "arroz", "pasta", "cebolla", "ajo", "patata", "atun", "zanahoria", "pimiento", "jamon", "bacon", "nata", "mantequilla", "champinones", "maiz", "lomo", "salchichas", "calabacin", "berenjena", "lentejas", "garbanzos", "judias", "salmon", "merluza", "gambas", "jamon york", "puerro", "alubias rojas", "tomate", "leche", "aceite"],
+    keywords: ["huevo", "huevos", "calamar", "calamares", "pan", "pan rallado", "panrallado", "queso", "pollo", "arroz", "pasta", "cebolla", "ajo", "patata", "atun", "zanahoria", "pimiento", "jamon", "bacon", "nata", "mantequilla", "champinones", "maiz", "lomo", "salchichas", "calabacin", "berenjena", "lentejas", "garbanzos", "judias", "salmon", "merluza", "gambas", "jamon york", "puerro", "alubias rojas", "tomate", "leche", "aceite"],
   },
 ];
 
