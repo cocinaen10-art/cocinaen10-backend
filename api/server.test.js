@@ -1,6 +1,11 @@
 const assert = require("node:assert/strict");
 const { after, before, test } = require("node:test");
-const { app, aplicarPreferencias, leerPreferencias } = require("./server");
+const {
+  app,
+  aplicarPreferencias,
+  leerPreferencias,
+  cantidadesDeIngredientesValidas,
+} = require("./server");
 
 let server;
 let baseUrl;
@@ -61,4 +66,24 @@ test("decision reconoce huevo, calamares y pan rallado como ingredientes de sart
 
   assert.equal(response.status, 200);
   assert.deepEqual(methodIds, ["pan"]);
+});
+
+test("valida cantidades concretas sin permitir ingredientes nuevos", () => {
+  assert.equal(
+    cantidadesDeIngredientesValidas(
+      [
+        { nombre: "arroz", cantidad: "160 g" },
+        { nombre: "agua", cantidad: "320 ml" },
+      ],
+      ["arroz"],
+    ),
+    true,
+  );
+  assert.equal(
+    cantidadesDeIngredientesValidas(
+      [{ nombre: "cebolla", cantidad: "1 unidad" }],
+      ["arroz"],
+    ),
+    false,
+  );
 });

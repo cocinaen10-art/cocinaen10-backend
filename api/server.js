@@ -190,6 +190,19 @@ function metodosCompatibles(ingredientes) {
     .map(({ keywords, ...method }) => method);
 }
 
+function cantidadesDeIngredientesValidas(items, ingredientes) {
+  if (!Array.isArray(items) || items.length === 0) return false;
+  const ingredientesPermitidos = new Set([
+    ...ingredientes,
+    "aceite", "sal", "vinagre", "agua", "pimienta",
+  ]);
+  return items.every((item) => {
+    const nombre = String(item?.nombre || "").trim().toLowerCase();
+    const cantidad = String(item?.cantidad || "").trim();
+    return ingredientesPermitidos.has(nombre) && cantidad.length > 0;
+  });
+}
+
 function getImageForRecipe(categoria) {
 
   try {
@@ -383,6 +396,7 @@ El JSON debe incluir SIEMPRE estos campos:
 - coste
 - por_que
 - ingredientes_usados
+- ingredientes_con_cantidades
 - pasos
 - truco
 
@@ -393,6 +407,15 @@ Reglas:
 
 - "personas" es obligatorio.
   Debe ser un número entero que indique las raciones reales de la receta.
+
+- "ingredientes_con_cantidades" es obligatorio.
+  Debe ser una lista con todos los ingredientes que se usan en la receta.
+  Cada elemento debe tener exactamente "nombre" y "cantidad".
+  Usa como "nombre" uno de los ingredientes recibidos o uno de estos básicos:
+  aceite, sal, vinagre, agua, pimienta.
+  La "cantidad" debe ser concreta y coherente con el número de personas,
+  por ejemplo "160 g", "2 unidades", "300 ml", "1 cucharada" o "1 pizca".
+  No escribas "al gusto" ni cantidades imprecisas.
 
 Ejemplos válidos:
 1
@@ -429,6 +452,9 @@ Formato exacto:
     "coste": "",
     "por_que": "",
     "ingredientes_usados": [],
+    "ingredientes_con_cantidades": [
+      { "nombre": "", "cantidad": "" }
+    ],
     "pasos": [],
     "truco": ""
   }
@@ -463,7 +489,12 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
       return res.status(502).json({ error: "No se pudo crear una receta válida." });
     }
     const recipe = parsed.opcion_1;
-    if (!recipe || !Array.isArray(recipe.ingredientes_usados)) {
+    if (
+      !recipe ||
+      !Array.isArray(recipe.ingredientes_usados) ||
+      !Array.isArray(recipe.ingredientes_con_cantidades) ||
+      recipe.ingredientes_con_cantidades.length === 0
+    ) {
       return res.status(502).json({ error: "La receta recibida no tiene un formato válido." });
     }
 
@@ -473,6 +504,10 @@ huevo, pollo, pasta, arroz, pescado, ensalada.`,
 
     if (usaIngredienteNoDisponible) {
       return res.status(502).json({ error: "La receta incluía ingredientes no disponibles." });
+    }
+
+    if (!cantidadesDeIngredientesValidas(recipe.ingredientes_con_cantidades, ingredientes)) {
+      return res.status(502).json({ error: "La receta incluía cantidades no válidas." });
     }
 
     console.log("RESPUESTA ENVIADA");
@@ -550,4 +585,9 @@ if (require.main === module) {
   });
 }
 
-module.exports = { app, aplicarPreferencias, leerPreferencias };
+module.exports = {
+  app,
+  aplicarPreferencias,
+  leerPreferencias,
+  cantidadesDeIngredientesValidas,
+};
